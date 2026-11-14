@@ -93,7 +93,7 @@ void spiBegin(uint8_t irq, uint8_t rst)
 #if defined(ARDUINO_ARCH_NRF52)
   SPI.setPins(DW3000_PIN_MISO, DW3000_PIN_SCK, DW3000_PIN_MOSI);
 #endif
-  SPI.begin();
+  SPI.begin(8, 9, 10, 2); // XIAO ESP32-C3: SCK, MISO, MOSI, CS
 #ifndef ESP8266
 //  SPI.usingInterrupt(digitalPinToInterrupt(irq)); // not every board support this, e.g. ESP8266
 #endif
@@ -244,7 +244,7 @@ void reset() {
     softReset();
   } else {
     // dw1000 data sheet v2.08 §5.6.1 page 20, the RSTn pin should not be driven high but left floating.
-    pinMode(_rst, OUTPUT);
+    pinMode(_rst, OUTPUT_OPEN_DRAIN);
     digitalWrite(_rst, LOW);
     delay(2);  // dw1000 data sheet v2.08 §5.6.1 page 20: nominal 50ns, to be safe take more time
     pinMode(_rst, INPUT);
